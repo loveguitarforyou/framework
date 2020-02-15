@@ -75,7 +75,9 @@ class Handle
                 $log .= PHP_EOL . $exception->getTraceAsString();
             }
 
-            $this->app->log->record($log, 'error');
+            try {
+                $this->app->log->record($log, 'error');
+            } catch (Exception $e){}
         }
     }
 
@@ -173,7 +175,7 @@ class Handle
                     'POST Data'             => $this->app->request->post(),
                     'Files'                 => $this->app->request->file(),
                     'Cookies'               => $this->app->request->cookie(),
-                    'Session'               => $this->app->session->all(),
+                    'Session'               => $this->app->exists('session') ? $this->app->session->all() : [],
                     'Server/Request Data'   => $this->app->request->server(),
                     'Environment Variables' => $this->app->request->env(),
                     'ThinkPHP Constants'    => $this->getConst(),
